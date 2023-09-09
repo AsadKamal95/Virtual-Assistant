@@ -1,0 +1,6 @@
+pyAudio
+pyttsx3
+gTTS
+SpeechRevognition
+pywhatkit
+wikipedia
