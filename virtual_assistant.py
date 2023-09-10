@@ -27,6 +27,7 @@ def talk(text):
 
 def input_instruction():
     try:
+        talk("listening")
         with speechRecognition.Microphone() as origin:
             speech = listener.listen(origin)
             instruction = listener.recognize_google(speech)
@@ -42,9 +43,10 @@ def play_sam():
     while(instruction != 'goodbye'):
         instruction = input_instruction()
         print(instruction)
-        if "sam" in instruction:
+        if "sam" in instruction or "sem" in instruction:
             instruction = instruction.replace('sam','')
-            talk("listening")
+            instruction = instruction.replace('sem','')
+            #talk("listening")
             
             print(instruction)
             if "play" in instruction and 'you tube' in instruction:
@@ -92,7 +94,13 @@ def play_sam():
                 for x in range(2):
                     pyautogui.press('tab')
                 pyautogui.press('enter')
-            elif 'goodbye' in instruction:
+            
+            elif 'toggle' in instruction and 'shuffle' in instruction:
+                os.system('spotify')
+                time.sleep(5)
+                pyautogui.hotkey('ctrl','s')
+                
+            elif 'goodbye' in instruction or 'good boy' in instruction:
                 talk('Goodbye')
                 break
                     
