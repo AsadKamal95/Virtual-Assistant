@@ -6,6 +6,9 @@ import wikipedia
 #from dotenv import load_dotenv
 import os
 import pyautogui
+import time
+import subprocess
+
 
 #load_dotenv()
 
@@ -23,16 +26,11 @@ def talk(text):
     machine.runAndWait()
 
 def input_instruction():
-    global instruction
     try:
         with speechRecognition.Microphone() as origin:
-            talk("listening")
             speech = listener.listen(origin)
             instruction = listener.recognize_google(speech)
             instruction=instruction.lower()
-            if "Sam" in instruction:
-                instruction = instruction.replace('sam','')
-                print(instruction)
     except:
         pass
     return instruction
@@ -40,36 +38,57 @@ def input_instruction():
 def play_sam():
     global instruction
     instruction=''
-    while(instruction != 'quit'):
+    #talk("listening")
+    while(instruction != 'goodbye'):
         instruction = input_instruction()
         print(instruction)
-        if "play" in instruction:
-            song = instruction.replace('play','')
-            print('Playing' + song)
-            talk("playing" + song)
-            pywhatkit.playonyt(song)
+        if "sam" in instruction:
+            instruction = instruction.replace('sam','')
+            talk("listening")
             
-        elif 'time' in instruction:
-            time = datetime.datetime.now().strftime('%I:%M%p')
-            print(time)
-            talk('Current time '+ time)
-            
-        elif 'date' in instruction:
-            date = datetime.datetime.now().strftime('%d /%m /%Y')
-            print(date)
-            talk("Today's date is " + date)
-            
-        elif 'who is' in instruction:
-            human = instruction.replace('who is','')
-            info = wikipedia.summary(human, 1)
-            print(info)
-            talk(info)
-            
-        elif 'quit' in instruction:
-            talk('Goodbye')
-            break
+            print(instruction)
+            if "play" in instruction:
+                song = instruction.replace('play','')
+                print('Playing' + song)
+                talk("playing" + song)
+                pywhatkit.playonyt(song)
                 
-        else:
-            talk("Please repeat")
+            elif 'time' in instruction:
+                Currenttime = datetime.datetime.now().strftime('%I:%M%p')
+                print(Currenttime)
+                talk('Current time '+ Currenttime)
+                
+            elif 'date' in instruction:
+                date = datetime.datetime.now().strftime('%d /%m /%Y')
+                print(date)
+                talk("Today's date is " + date)
+                
+            elif 'who is' in instruction:
+                human = instruction.replace('who is','')
+                info = wikipedia.summary(human, 1)
+                print(info)
+                
+                talk(info)
+            
+            elif 'text' in instruction:
+                print('In text condition')
+                subprocess.Popen(["cmd", "/C", "start whatsapp://send?phone=+923318110015"], shell=True)
+                time.sleep(1)
+                for x in range(9):
+                    pyautogui.press('tab')
+                talk('Say what you want me to send.')
+                with speechRecognition.Microphone() as origin:
+                    speech = listener.listen(origin)
+                    text = listener.recognize_google(speech)
+                    text = text.lower()
+                pyautogui.write(text)
+                pyautogui.press('enter')
+                
+            elif 'goodbye' in instruction:
+                talk('Goodbye')
+                break
+                    
+            else:
+                talk("Please repeat")
     
 play_sam()
