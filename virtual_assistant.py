@@ -47,7 +47,7 @@ def play_sam():
             talk("listening")
             
             print(instruction)
-            if "play" in instruction:
+            if "play" in instruction and 'you tube' in instruction:
                 song = instruction.replace('play','')
                 print('Playing' + song)
                 talk("playing" + song)
@@ -83,7 +83,15 @@ def play_sam():
                     text = text.lower()
                 pyautogui.write(text)
                 pyautogui.press('enter')
-                
+            
+            elif 'play' in instruction and 'liked songs' in instruction and 'spotify' in instruction:
+                os.system('spotify')
+                time.sleep(5)
+                pyautogui.hotkey('alt','shift','s')
+                time.sleep(1)
+                for x in range(2):
+                    pyautogui.press('tab')
+                pyautogui.press('enter')
             elif 'goodbye' in instruction:
                 talk('Goodbye')
                 break
